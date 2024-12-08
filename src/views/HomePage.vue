@@ -3,15 +3,16 @@
     <ion-page>
       <ion-header>
         <ion-toolbar>
-          <ion-title>Tugas 2 - 044084843</ion-title>
-          <ion-title size="small">Menampilkan Tabel Cryptocurrency</ion-title>
+          <ion-title>Tugas 3 | Cryptocurrency</ion-title>
         </ion-toolbar>
       </ion-header>
       
       <ion-content>  
         <div class="table-container">
           <!-- button untuk trigger axios ambil data -->
-          <ion-button expand="block" @click="fetchData">{{paginatedData.length > 0 ? 'Update Data' : 'Get Data'}}</ion-button>
+          <div class="content-center">
+            <ion-button @click="fetchData">Refresh</ion-button>
+          </div>
 
           <!-- set tampilan saat loading data -->
           <div v-if="loading" class="loading">Loading data...</div>
@@ -19,19 +20,26 @@
           <!-- tampilkan datatable jika data sudah ada -->
           <div v-else-if="paginatedData.length > 0">
             <table class="datatable">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Symbol</th>
-                  <th>Price (USD)</th>
-                </tr>
-              </thead>
               <tbody>
                 <!-- loop data -->
                 <tr v-for="coin in paginatedData" :key="coin.id">
-                  <td>{{ coin.name }}</td>
-                  <td>{{ coin.symbol }}</td>
-                  <td>${{ parseFloat(coin.price_usd).toFixed(2) }}</td>
+                  <td class="rank">
+                    <!-- tampilkan judul statis -->
+                    <span>Rank</span>
+                    <!-- ambil data rank secara dinamis -->
+                    <h3>{{ coin.rank }}</h3>
+                  </td>
+                  <td>
+                    <!-- ambil data name & symbol secara dinamis -->
+                    <span>{{ coin.name }}</span>
+                    <h3>{{ coin.symbol }}</h3>
+                  </td>
+                  <td>
+                    <!-- tampilkan judul secara statis -->
+                    <span>USD</span>
+                    <!-- ambil data price secara dinamis -->
+                    <h3>{{ parseFloat(coin.price_usd).toFixed(2) }}</h3>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -73,6 +81,9 @@
         return this.datas.slice(start, start + this.perPage);
       },
     },
+    mounted() {
+      this.fetchData()
+    },
     methods: {
       // fetch data dari api menggunakan axios
       async fetchData() {
@@ -111,7 +122,6 @@
 
   .datatable th,
   .datatable td {
-    border: 1px solid #ddd;
     padding: 0.8rem;
     text-align: left;
   }
@@ -121,8 +131,19 @@
     font-weight: bold;
   }
 
-  .datatable tr:nth-child(even) {
-    background-color: #f9f9f9;
+  .datatable tr {
+    background-color: #faebbb;
+    border: 1px solid #ffbe0d;
+  }
+  
+  .datatable td h3 {
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .rank {
+    text-align: center !important;
   }
 
   .datatable tr:hover {
@@ -160,6 +181,16 @@
 
   .pagination-btn:hover:not(:disabled) {
     background-color: #3171e0;
+  }
+  
+  .table-container .content-center {
+    display: grid;
+    justify-content: center;
+  }
+  
+  .content-center button {
+    padding: 10px 40px !important;
+    border-radius: 7px !important;
   }
 
   </style>
